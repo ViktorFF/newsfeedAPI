@@ -1,17 +1,14 @@
 package by.viktorff.newsfeed.controller;
 
 import by.viktorff.newsfeed.exception.user.AuthenticationUserException;
-import by.viktorff.newsfeed.exception.user.DeleteUserException;
 import by.viktorff.newsfeed.exception.user.LoginUserException;
 import by.viktorff.newsfeed.model.User;
 import by.viktorff.newsfeed.model.apirequest.UserApiRequest;
 import by.viktorff.newsfeed.service.UserService;
-import by.viktorff.newsfeed.service.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping(path = "/user")
@@ -19,31 +16,31 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserServiceImpl userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping(path = "/{login}")
-    public ResponseEntity<User> getUser(@PathVariable String login,
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<User> getUser(@PathVariable Long id,
                                         @RequestBody UserApiRequest request) {
-        if (!userService.getTokens().containsValue(request.getToken())) throw new LoginUserException();
-        return ResponseEntity.ok().body(userService.getUser(login));
+        if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
+        return ResponseEntity.ok().body(userService.getUser(id));
     }
 
-    @PutMapping(path = "/{login}")
-    public ResponseEntity<String> updateUser(@PathVariable String login,
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable Long id,
                                              @Valid @RequestBody UserApiRequest request) {
-        if (!userService.getTokens().containsValue(request.getToken())) throw new LoginUserException();
-        userService.updateUser(login, request.getUser());
+        if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
+        userService.updateUser(id, request.getUser());
         return ResponseEntity.ok("Successful operation");
     }
 
-    @DeleteMapping(path = "/{login}")
-    public ResponseEntity<String> deleteUser(@PathVariable String login,
-                                                  @RequestBody UserApiRequest request) {
-        if (!userService.getTokens().containsValue(request.getToken())) throw new LoginUserException();
-        if (userService.getTokens().get(userService.getUsersMap().get(login).getId()).equals(request.getToken())) throw new DeleteUserException();
-        userService.deleteUser(login);
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id,
+                                             @RequestBody UserApiRequest request) {
+        if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
+        if (!userService.isAdmin(request.getRequestUserRole())) ResponseEntity.badRequest().body("You don't have enough rights");
+        userService.deleteUser(id, request.getToken());
         return ResponseEntity.ok("Successful operation");
     }
 
@@ -56,7 +53,7 @@ public class UserController {
 
     @PostMapping(path = "logout")
     public ResponseEntity<String> logout(@RequestBody UserApiRequest request) {
-        if (!userService.getTokens().containsValue(request.getToken())) throw new LoginUserException();
+        if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
         userService.logout(request.getToken());
         return ResponseEntity.ok("Successful operation");
     }
@@ -64,12 +61,6 @@ public class UserController {
     @PostMapping
     public ResponseEntity<String> createUser(@Valid @RequestBody User user) {
         userService.addUser(user);
-        return ResponseEntity.ok("Successful operation");
-    }
-
-    @PostMapping(path = "/createWithList")
-    public ResponseEntity<String> createWithList(@Valid @RequestBody List<User> users) {
-        userService.addAllUsers(users);
         return ResponseEntity.ok("Successful operation");
     }
 }

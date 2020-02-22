@@ -1,7 +1,9 @@
 package by.viktorff.newsfeed.service;
 
 import by.viktorff.newsfeed.exception.user.AuthenticationUserException;
+import by.viktorff.newsfeed.exception.user.DeleteUserException;
 import by.viktorff.newsfeed.exception.user.UserNotFoundException;
+import by.viktorff.newsfeed.model.Role;
 import by.viktorff.newsfeed.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -13,29 +15,25 @@ import java.util.Random;
 
 @Component
 public class UserServiceImpl implements UserService{
-    private Map<String, User> usersMap;
+    private Map<Long, User> usersMap;
+    private Map<String, User> authMap;
     private Map<Long, String> tokens;
 
-    public UserServiceImpl(Map<String, User> usersMap, Map<Long, String> tokens) {
+    public UserServiceImpl(Map<Long, User> usersMap, Map<String, User> authMap, Map<Long, String> tokens) {
         this.usersMap = usersMap;
+        this.authMap = authMap;
         this.tokens = tokens;
     }
 
-    public Map<String, User> getUsersMap() {
-        return usersMap;
-    }
-
-    public Map<Long, String> getTokens() {
-        return tokens;
-    }
-
     public void addUser(User user) {
-        usersMap.put(user.getLogin(), user);
+        usersMap.put(user.getId(), user);
+        authMap.put(user.getLogin(), user);
     }
 
     public void addAllUsers(List<User> userList) {
         for (User user: userList) {
-            usersMap.put(user.getLogin(), user);
+            usersMap.put(user.getId(), user);
+            authMap.put(user.getLogin(), user);
         }
     }
 
@@ -46,10 +44,10 @@ public class UserServiceImpl implements UserService{
         if (usersMap.isEmpty()) {
             return null;
         }
-        if (usersMap.containsKey(login)) {
-            if (usersMap.get(login).getPassword().equals(password)) {
+        if (authMap.containsKey(login)) {
+            if (authMap.get(login).getPassword().equals(password)) {
                 String token = Integer.toString(new Random().nextInt());
-                tokens.put(usersMap.get(login).getId(), token);
+                tokens.put(authMap.get(login).getId(), token);
                 return token;
             }
         }
@@ -60,19 +58,34 @@ public class UserServiceImpl implements UserService{
         tokens.values().remove(token);
     }
 
-    public User getUser(String login) {
-        if (!usersMap.containsKey(login)) throw new UserNotFoundException();
-        return usersMap.get(login);
+    public boolean isLoggedIn(String token) {
+        return tokens.containsValue(token);
     }
 
-    public void updateUser(String login, User user) {
-        if (!usersMap.containsKey(login)) throw new UserNotFoundException();
-        if (!user.getLogin().equals(login)) throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
-        usersMap.put(login, user);
+    @Override
+    public boolean isAdmin(Role role) {
+        return role.equals(Role.ADMIN);
     }
 
-    public void deleteUser(String login) {
-        if (!usersMap.containsKey(login)) throw new UserNotFoundException();
-        usersMap.remove(login);
+    @Override
+    public boolean isModerator(Role role) {
+        return role.equals(Role.MODERATOR);
+    }
+
+    public User getUser(Long id) {
+        if (!usersMap.containsKey(id)) throw new UserNotFoundException();
+        return usersMap.get(id);
+    }
+
+    public void updateUser(Long id, User user) {
+        if (!usersMap.containsKey(id)) throw new UserNotFoundException();
+        if (user.getId() != id) throw new HttpClientErrorException(HttpStatus.BAD_REQUEST);
+        usersMap.put(id, user);
+    }
+
+    public void deleteUser(Long id, String token) {
+        if (!usersMap.containsKey(id)) throw new UserNotFoundException();
+        if (tokens.get(id).equals(token)) throw new DeleteUserException();
+        usersMap.remove(id);
     }
 }

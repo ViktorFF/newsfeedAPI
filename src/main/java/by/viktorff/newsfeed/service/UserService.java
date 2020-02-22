@@ -1,18 +1,16 @@
 package by.viktorff.newsfeed.service;
 
+import by.viktorff.newsfeed.model.Role;
 import by.viktorff.newsfeed.model.User;
 
-import java.util.List;
-import java.util.Map;
-
 public interface UserService {
-    Map<String, User> getUsersMap();
-    Map<Long, String> getTokens();
     void addUser(User user);
-    void addAllUsers(List<User> userList);
-    User getUser(String login);
-    void updateUser(String login, User user);
-    void deleteUser(String login);
+    User getUser(Long id);
+    void updateUser(Long id, User user);
+    void deleteUser(Long id, String token);
     String authentication(User newUser);
     void logout(String token);
+    boolean isLoggedIn(String token);
+    boolean isAdmin(Role role);
+    boolean isModerator(Role role);
 }

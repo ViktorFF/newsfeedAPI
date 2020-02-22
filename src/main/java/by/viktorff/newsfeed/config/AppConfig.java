@@ -12,7 +12,12 @@ import java.util.Map;
 public class AppConfig {
 
     @Bean
-    public Map<String, User> getUsersMap() {
+    public Map<Long, User> getUsersMap() {
+        return new LinkedHashMap<>();
+    }
+
+    @Bean
+    public Map<String, User> getAuthMap() {
         return new LinkedHashMap<>();
     }
 
