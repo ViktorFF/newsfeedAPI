@@ -1,5 +1,6 @@
 package by.viktorff.newsfeed.config;
 
+import by.viktorff.newsfeed.model.News;
 import by.viktorff.newsfeed.model.User;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,5 +25,10 @@ public class AppConfig {
     @Bean
     public Map<Long, String> getUserTokens() {
         return new HashMap<>();
+    }
+
+    @Bean
+    public Map<Long, News> getAllNews() {
+        return new LinkedHashMap<>();
     }
 }

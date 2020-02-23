@@ -30,12 +30,12 @@ public class UserServiceImpl implements UserService{
         authMap.put(user.getLogin(), user);
     }
 
-    public void addAllUsers(List<User> userList) {
-        for (User user: userList) {
-            usersMap.put(user.getId(), user);
-            authMap.put(user.getLogin(), user);
-        }
-    }
+//    public void addAllUsers(List<User> userList) {
+//        for (User user: userList) {
+//            usersMap.put(user.getId(), user);
+//            authMap.put(user.getLogin(), user);
+//        }
+//    }
 
     public String authentication(User newUser) {
         if (tokens.containsKey(newUser.getId())) throw new AuthenticationUserException("User has already logged in");
@@ -75,6 +75,16 @@ public class UserServiceImpl implements UserService{
     public User getUser(Long id) {
         if (!usersMap.containsKey(id)) throw new UserNotFoundException();
         return usersMap.get(id);
+    }
+
+    public User getUser(String token) {
+        if (!tokens.containsValue(token)) throw new UserNotFoundException();
+        for (Map.Entry<Long, String> users : tokens.entrySet()) {
+            if (users.getValue().equals(token)) {
+                return usersMap.get(users.getKey());
+            }
+        }
+        return null;
     }
 
     public void updateUser(Long id, User user) {

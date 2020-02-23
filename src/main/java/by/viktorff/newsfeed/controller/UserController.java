@@ -31,8 +31,11 @@ public class UserController {
     public ResponseEntity<String> updateUser(@PathVariable Long id,
                                              @Valid @RequestBody UserApiRequest request) {
         if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
-        userService.updateUser(id, request.getUser());
-        return ResponseEntity.ok("Successful operation");
+        if (userService.isAdmin(request.getRequestUserRole()) || userService.getUser(request.getToken()).getId() == id) {
+            userService.updateUser(id, request.getUser());
+            return ResponseEntity.ok("Successful operation");
+        }
+        return ResponseEntity.badRequest().body("You don't have enough rights");
     }
 
     @DeleteMapping(path = "/{id}")

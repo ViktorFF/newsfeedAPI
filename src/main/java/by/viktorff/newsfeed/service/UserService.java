@@ -6,6 +6,7 @@ import by.viktorff.newsfeed.model.User;
 public interface UserService {
     void addUser(User user);
     User getUser(Long id);
+    User getUser(String token);
     void updateUser(Long id, User user);
     void deleteUser(Long id, String token);
     String authentication(User newUser);

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,6 +20,7 @@ public class User {
     private Role role;
     private String firstName;
     private String lastName;
+    private List<NewsTag> newsTagList;
     private String email;
 
     @NotBlank
