@@ -6,12 +6,15 @@ import by.viktorff.newsfeed.model.User;
 import by.viktorff.newsfeed.model.apirequest.UserApiRequest;
 import by.viktorff.newsfeed.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 @RestController
 @RequestMapping(path = "/user")
+@Validated
 public class UserController {
 
     private UserService userService;
@@ -21,14 +24,14 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id,
+    public ResponseEntity<User> getUser(@PathVariable @Min(value = 0) Long id,
                                         @RequestBody UserApiRequest request) {
         if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
         return ResponseEntity.ok().body(userService.getUser(id));
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id,
+    public ResponseEntity<String> updateUser(@PathVariable @Min(value = 0) Long id,
                                              @Valid @RequestBody UserApiRequest request) {
         if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
         if (userService.isAdmin(request.getRequestUserRole()) || userService.getUser(request.getToken()).getId() == id) {
@@ -39,7 +42,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id,
+    public ResponseEntity<String> deleteUser(@PathVariable @Min(value = 0) Long id,
                                              @RequestBody UserApiRequest request) {
         if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
         if (!userService.isAdmin(request.getRequestUserRole())) ResponseEntity.badRequest().body("You don't have enough rights");

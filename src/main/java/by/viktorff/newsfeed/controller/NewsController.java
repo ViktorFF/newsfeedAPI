@@ -6,13 +6,16 @@ import by.viktorff.newsfeed.model.apirequest.NewsApiRequest;
 import by.viktorff.newsfeed.service.NewsService;
 import by.viktorff.newsfeed.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @RequestMapping(path = "/news")
+@Validated
 public class NewsController {
     private UserService userService;
     private NewsService newsService;
@@ -30,7 +33,7 @@ public class NewsController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<News> getNewsById(@PathVariable Long id,
+    public ResponseEntity<News> getNewsById(@PathVariable @Min(value = 0) Long id,
                                             @RequestBody NewsApiRequest request) {
         if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
         return ResponseEntity.ok().body(newsService.getNewsById(id));
@@ -61,7 +64,7 @@ public class NewsController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<String> updateNews(@PathVariable Long id,
+    public ResponseEntity<String> updateNews(@PathVariable @Min(value = 0) Long id,
                                              @Valid @RequestBody NewsApiRequest request) {
         if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
         if (!userService.isAdmin(request.getRequestUserRole()) || !userService.isModerator(request.getRequestUserRole()))
@@ -71,7 +74,7 @@ public class NewsController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<String> deleteNews(@PathVariable Long id,
+    public ResponseEntity<String> deleteNews(@PathVariable @Min(value = 0) Long id,
                                              @RequestBody NewsApiRequest request) {
         if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
         if (!userService.isAdmin(request.getRequestUserRole()) || !userService.isModerator(request.getRequestUserRole()))
