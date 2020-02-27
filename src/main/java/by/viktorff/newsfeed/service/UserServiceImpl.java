@@ -5,11 +5,11 @@ import by.viktorff.newsfeed.exception.user.DeleteUserException;
 import by.viktorff.newsfeed.exception.user.UserNotFoundException;
 import by.viktorff.newsfeed.model.Role;
 import by.viktorff.newsfeed.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -19,6 +19,10 @@ public class UserServiceImpl implements UserService{
     private Map<String, User> authMap;
     private Map<Long, String> tokens;
 
+    public UserServiceImpl() {
+    }
+
+    @Autowired
     public UserServiceImpl(Map<Long, User> usersMap, Map<String, User> authMap, Map<Long, String> tokens) {
         this.usersMap = usersMap;
         this.authMap = authMap;

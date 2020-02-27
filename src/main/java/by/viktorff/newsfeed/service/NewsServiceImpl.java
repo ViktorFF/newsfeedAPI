@@ -4,6 +4,7 @@ import by.viktorff.newsfeed.exception.news.NewsNotFoundException;
 import by.viktorff.newsfeed.model.News;
 import by.viktorff.newsfeed.model.NewsStatus;
 import by.viktorff.newsfeed.model.NewsTag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -16,6 +17,7 @@ import java.util.Map;
 public class NewsServiceImpl implements NewsService{
     private Map<Long, News> allNews;
 
+    @Autowired
     public NewsServiceImpl(Map<Long, News> allNews) {
         this.allNews = allNews;
     }
