@@ -6,40 +6,41 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
-GET http://localhost:8080/user/-1
+GET http://localhost:8080/user/1
 Content-Type: application/json
 
 {
-  "token": "-2042923725"
+  "token": "823204654"
 }
 
 ###
 
-PUT http://localhost:8080/user/0
+PUT http://localhost:8080/user/1
 Content-Type: application/json
 
 {
-  "token": "685781240",
+  "token": "823204654",
   "requestUserRole": "ADMIN",
   "user": {
-    "id": 0,
+    "id": 1,
     "role": "ADMIN",
     "username": "string",
     "firstName": "test",
     "lastName": "superTest",
     "email": "test",
     "password": "test",
+    "token": "823204654",
     "phone": "test"
   }
 }
 
 ###
 
-DELETE http://localhost:8080/user/0
+DELETE http://localhost:8080/user/1
 Content-Type: application/json
 
 {
-  "token": "-2065177793",
+  "token": "823204654",
   "requestUserRole": "MODERATOR"
 }
 
@@ -62,7 +63,7 @@ POST http://localhost:8080/user/logout
 Content-Type: application/json
 
 {
-  "token": "1721015269"
+  "token": "-1692904944"
 }
 
 ###
@@ -78,6 +79,7 @@ Content-Type: application/json
   "email": "string",
   "login": "string",
   "password": "string",
+  "token": null,
   "phone": "string"
 }
 

@@ -36,7 +36,7 @@ public class UserController {
     public ResponseEntity<String> updateUser(@PathVariable @Min(value = 0) Long id,
                                              @Valid @RequestBody UserApiRequest request) {
         if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
-        if (userService.isAdmin(request.getRequestUserRole()) || userService.getUser(request.getToken()).getId() == id) {
+        if (userService.isAdmin(request.getRequestUserRole())) {
             userService.updateUser(id, request.getUser());
             log.info("User with id={} was updated", id);
             return ResponseEntity.ok("Successful operation");
