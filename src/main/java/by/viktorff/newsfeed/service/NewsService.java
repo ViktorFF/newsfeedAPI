@@ -3,6 +3,7 @@ package by.viktorff.newsfeed.service;
 import by.viktorff.newsfeed.model.News;
 import by.viktorff.newsfeed.model.NewsStatus;
 import by.viktorff.newsfeed.model.NewsTag;
+import by.viktorff.newsfeed.model.User;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface NewsService {
     News getNewsById(Long id);
     List<News> getNewsByTag(NewsTag tag);
     List<News> getNewsByTags(List<NewsTag> tags);
-    List<News> getNewsByAuthor(Long authorId);
+    List<News> getNewsByAuthor(User author);
     List<News> getNewsByStatus(NewsStatus status);
     void updateNews(Long id, News news);
     void deleteNews(Long id);

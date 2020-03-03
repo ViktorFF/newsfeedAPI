@@ -6,6 +6,8 @@ import by.viktorff.newsfeed.model.User;
 import by.viktorff.newsfeed.model.apirequest.UserApiRequest;
 import by.viktorff.newsfeed.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,8 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService) {
+    @Autowired
+    public UserController(@Qualifier("userServiceJPA") UserService userService) {
         this.userService = userService;
     }
 

@@ -1,6 +1,5 @@
 package by.viktorff.newsfeed.repository;
 
-import by.viktorff.newsfeed.model.Role;
 import by.viktorff.newsfeed.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

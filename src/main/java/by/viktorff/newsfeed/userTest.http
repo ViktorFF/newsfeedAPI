@@ -10,7 +10,7 @@ GET http://localhost:8080/user/1
 Content-Type: application/json
 
 {
-  "token": "823204654"
+  "token": "58052804"
 }
 
 ###
@@ -19,7 +19,7 @@ PUT http://localhost:8080/user/1
 Content-Type: application/json
 
 {
-  "token": "823204654",
+  "token": "58052804",
   "requestUserRole": "ADMIN",
   "user": {
     "id": 1,
@@ -29,7 +29,7 @@ Content-Type: application/json
     "lastName": "superTest",
     "email": "test",
     "password": "test",
-    "token": "823204654",
+    "token": "58052804",
     "phone": "test"
   }
 }

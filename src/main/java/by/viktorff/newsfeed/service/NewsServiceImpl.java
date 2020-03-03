@@ -4,6 +4,7 @@ import by.viktorff.newsfeed.exception.news.NewsNotFoundException;
 import by.viktorff.newsfeed.model.News;
 import by.viktorff.newsfeed.model.NewsStatus;
 import by.viktorff.newsfeed.model.NewsTag;
+import by.viktorff.newsfeed.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -62,10 +63,10 @@ public class NewsServiceImpl implements NewsService{
         return newsList;
     }
 
-    public List<News> getNewsByAuthor(Long authorId) {
+    public List<News> getNewsByAuthor(User author) {
         List<News> newsList = new ArrayList<>();
         for (News news : allNews.values()) {
-            if (news.getAuthor().getId() == authorId) {
+            if (news.getAuthor().equals(author)) {
                 newsList.add(news);
             }
         }

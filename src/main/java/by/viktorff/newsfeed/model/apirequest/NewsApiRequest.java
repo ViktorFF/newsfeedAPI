@@ -1,9 +1,6 @@
 package by.viktorff.newsfeed.model.apirequest;
 
-import by.viktorff.newsfeed.model.News;
-import by.viktorff.newsfeed.model.NewsStatus;
-import by.viktorff.newsfeed.model.NewsTag;
-import by.viktorff.newsfeed.model.Role;
+import by.viktorff.newsfeed.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +16,6 @@ public class NewsApiRequest {
     private News news;
     private NewsTag tag;
     private NewsStatus status;
-    private Long authorId;
+    private User author;
     private List<NewsTag> tags;
 }

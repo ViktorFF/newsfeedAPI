@@ -5,6 +5,7 @@ import by.viktorff.newsfeed.model.News;
 import by.viktorff.newsfeed.model.apirequest.NewsApiRequest;
 import by.viktorff.newsfeed.service.NewsService;
 import by.viktorff.newsfeed.service.UserService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class NewsController {
     private UserService userService;
     private NewsService newsService;
 
-    public NewsController(UserService userService, NewsService newsService) {
+    public NewsController(@Qualifier("userServiceJPA") UserService userService, @Qualifier("newsServiceJPA") NewsService newsService) {
         this.userService = userService;
         this.newsService = newsService;
     }
@@ -54,7 +55,7 @@ public class NewsController {
     @GetMapping(path = "/byAuthor")
     public ResponseEntity<List<News>> getNewsByAuthor(@RequestBody NewsApiRequest request) {
         if (!userService.isLoggedIn(request.getToken())) throw new LoginUserException();
-        return ResponseEntity.ok().body(newsService.getNewsByAuthor(request.getAuthorId()));
+        return ResponseEntity.ok().body(newsService.getNewsByAuthor(request.getAuthor()));
     }
 
     @GetMapping(path = "/byStatus")
